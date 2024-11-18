@@ -1,7 +1,7 @@
 import Roulette from "@/components/roulette";
 
 async function fetchContent() {
-  const res = await fetch("http://localhost:3000/api/content");
+  const res = await fetch(process.env.API_URL + "api/content");
   if (!res.ok) throw new Error("Erro ao carregar conteúdos");
   return res.json();
 }
