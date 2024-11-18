@@ -1,12 +1,16 @@
 import Roulette from "@/components/roulette";
+import { BASE_API_URL } from "@/utils/constants";
 
 async function fetchContent() {
-  const res = await fetch(process.env.NEXT_PUBLIC_API_URL + "api/content");
+  const res = await fetch(`${BASE_API_URL}api/content`);
   if (!res.ok) throw new Error("Erro ao carregar conteúdos");
   return res.json();
 }
 
 export default async function Home() {
+  if (!BASE_API_URL) {
+    return null;
+  }
   const content = await fetchContent();
 
   return (
