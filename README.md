@@ -6,7 +6,7 @@ Escolhi esse framework por usar typescript e ser baseado no React. Também uso o
 Clone o projeto:
 
 ```bash
-git clone {{ url do repositório }}
+git clone git@github.com:Felipe6090/roleta-mbl.git
 ```
 
 Instale as dependências:
