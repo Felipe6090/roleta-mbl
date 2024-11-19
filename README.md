@@ -1,36 +1,106 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Esse é um projeto [Next.js](https://nextjs.org) criado executando [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Escolhi esse framework por usar typescript e ser baseado no React. Também uso o serviço da [Vercel](https://vercel.com/), empresa responsável pelo Next, para fazer o deploy. [Link do projeto](https://roleta-mbl.vercel.app/)
 
-## Getting Started
+## Para executar o projeto localmente
 
-First, run the development server:
+Clone o projeto:
+
+```bash
+git clone {{ url do repositório }}
+```
+
+Instale as dependências:
+
+```bash
+cd roleta-mbl
+npm i
+```
+
+Configure o [prisma](https://www.prisma.io/), é preciso criar um arquivo `.env` na root do projeto com as configurações do seu banco de dados local!
+
+```bash
+npx prisma generate
+```
+
+Execute o servidor de desenvolvimento:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Abra no seu navegador a url [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Estrutura do projeto
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+O Next possui um sistema de [rotas](https://nextjs.org/docs/app/building-your-application/routing) integrado, `page.tsx` representa uma página, sendo sua rota separada pelo nome da pasta dentro de `/src/app`. Como esse projeto só possui uma página, só temos um `page.tsx` em `app`.
 
-## Learn More
+O projeto possui 4 componentes:
 
-To learn more about Next.js, take a look at the following resources:
+- *roulette*: O carrossel principal da aplicação
+- *banner*: Os item do carrossel, exibe o título, imagem de fundo e tags.
+- *modal*: O modal aberto ao clickar em um banner, também exibe os 3 items citados no anterior mais uma descrição.
+- *tag*: A tag é apenas um decorador dos outros dois componentes, ele possui a cor da fonte, cor de fundo e titulo como personalizáveis 
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Os 3 últimos componentes são de fácil mudança e personalização mas o carrossel é complicado.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
+```
+.
+├── prisma
+│   └── schema.prisma
+├── public
+├── src
+│   ├── app
+│   │   ├── api
+│   │   │   ├── content
+│   │   │   └── tag
+│   │   ├── layout.tsx
+│   │   └── page.tsx
+│   ├── components
+│   │   ├── banner
+│   │   ├── modal
+│   │   ├── roulette
+│   │   └── tag
+│   ├── lib
+│   │   └── prisma.ts
+│   └── utils
+│       └── constants.ts
+├── .env
+├── package.json
+└── tsconfig.json
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+Utilizei o [prisma](https://www.prisma.io/) para gerenciar o banco de dados pela [versatilidade](https://www.prisma.io/docs/orm/overview/databases) dele. Neste projeto eu uso [postgres](https://www.prisma.io/docs/orm/overview/databases/postgresql), você pode mudar em `/prisma/schema.prisma`. O Next também pode fazer requisições http ou querys sql, recebo e manipulo os dados de conteudo e tags em `/src/app/api`.
+
+No banco de dados temos 3 tabelas:
+
+### Contents - Conteudo dos banners e modais
+
+| **ID** | **Título**                 | **URL da Imagem**       | **Descrição**                                                   | 
+|--------|----------------------------|-------------------------|-----------------------------------------------------------------|
+| 1      | Tutorial Mamãefalei       | /mamaefalei.jpeg        | Aprenda como planejar, produzir e editar a sua ação de mamãe falei | 
+| 2      | Povos Indo-Europeios      | /mithra.jpg             | Conheça a história de um dos povos mais importantes da humanidade | 
+| 3      | Aulas Academia MBL        | /banner-academia.jpg    | Assista às aulas da academia!                                   | 
+| 4      | Aulas Academia            | /banner-academia.jpg    | Assista às aulas da academia!                                   | 
+| 5      | Aulas MBL                 | /banner-academia.jpg    | Assista às aulas da academia!                                   | 
+
+No banco de dados é salvo apenas o caminho para a imagem de fundo, ela deve ficar salva em `/public`
+
+---
+
+### Tags
+
+| **ID** | **Título**    | **Cor de Fundo** | **Cor do Texto** |
+|--------|---------------|------------------|------------------|
+| 1      | Novo          | #FF6347          | #FFFFFF          |
+| 2      | Aula          | #69b7ea          | #FFFFFF          |
+| 3      | Mini-Doc      | #4CAF50          | #FFFFFF          |
+
+---
+
+### Contents_Tags - Relação entre tabelas
+
+| **Content ID** | **Tag ID** |
+|----------------|------------|
